@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/titlebar_ly"
+    android:background="@color/accent_fc5"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        >
+
+        <TextView android:id="@+id/btn_left"
+            style="@style/CommonSingleTv"
+            android:layout_height="fill_parent"
+            android:layout_alignParentLeft="true"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="@dimen/common_mar_left"
+            android:text=""/>
+        <TextView android:id="@+id/btn_close"
+            style="@style/CommonSingleTv"
+            android:layout_height="fill_parent"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:text="关闭"
+            android:layout_toRightOf="@+id/btn_left"
+            android:layout_marginLeft="8dp"
+            android:visibility="gone"
+            />
+        <RelativeLayout android:id="@+id/titlebar_rl_center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:layout_marginLeft="@dimen/common_mar_left"
+            android:layout_marginRight="@dimen/common_mar_right"
+            android:layout_weight="1">
+            <TextView android:id="@+id/tv_title"
+                style="@style/CommonSingleTv"
+                android:ellipsize="middle"
+                android:drawablePadding="@dimen/common_margin_dz2"
+                android:maxWidth="180dip"
+                android:text="title"
+                android:layout_centerInParent="true"
+                android:layout_weight="1"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true">
+            <TextView android:id="@+id/btn_right"
+                style="@style/CommonSingleTv"
+                android:gravity="center_vertical|right"
+                android:layout_height="fill_parent"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:paddingRight="@dimen/common_mar_right"/>
+            <TextView android:id="@+id/btn_popup"
+                style="@style/CommonSingleTv"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:layout_height="fill_parent"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:paddingRight="@dimen/common_mar_left"
+                android:visibility="gone"
+                />
+        </LinearLayout>
+
+        <com.zy.webbrowser.view.SparkPrograssBar
+            android:id="@+id/webview_progressbar"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"/>
+
+    </RelativeLayout>
+</LinearLayout>

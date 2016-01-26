@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 字体颜色 -->
+    <color name="primary_fc1">#3f3f3f</color>
+    <color name="secondary_fc2">#9a9a9a</color>
+    <color name="disable_fc3">#bdbdbd</color>
+    <color name="tip_fc3">#bdbdbd</color>
+    <color name="caution_fc4">#f35959</color>
+    <color name="guide_fc5">#3cbaff</color>
+    <color name="accent_fc5">#3cbaff</color>
+    <color name="primary_light_fc6">#ffffff</color>
+    <color name="press_fc7">#308ec2</color>
+    <color name="keyword_nor_fc8">#fdb933</color>
+    <color name="keyword_pre_fc9">#f29f29</color>
+    <color name="btn_light_disable_login">#7fffffff</color>
+
+    <color name="keyword_tasK_me">#76f7ff</color>
+
+    <!-- 蒙板 -->
+    <color name="popup_bg">#4d04142a</color><!-- 弹出框外透明层30% -->
+    <color name="popup">#c004142a</color><!-- 弹出框背景75% -->
+    <color name="app_press">#1a000000</color><!-- 应用图标按下时效果10% -->
+
+    <!-- 导航栏dark -->
+    <color name="btn_nav_dark_normal">#3cbaff</color>
+    <color name="btn_nav_dark_press">#dfebf2</color>
+    <color name="btn_nav_dark_disable">#bdbdbd</color>
+    <!-- 导航栏light -->
+    <color name="btn_nav_light_normal">#ffffff</color>
+    <color name="btn_nav_light_press">#dfebf2</color>
+    <color name="btn_nav_light_disable">#bdbdbd</color>
+
+    <!-- 按钮通用背景色 -->
+    <color name="btn_normal">#3cbaff</color>
+    <color name="btn_press">#308ec2</color>
+    <color name="btn_disable">#e9ecf1</color>
+    <color name="btn_normal_half">#7F3cbaff</color>
+    <!-- 对话框按钮通用背景色 -->
+    <color name="btn_dialog_normal">#ffffff</color>
+    <color name="btn_dialog_press">#1a04142a</color>
+
+    <!-- 输入框 -->
+    <color name="edit_box_normal">#dce1e8</color>
+    <color name="edit_box_forcus">#3cbaff</color>
+    <color name="edit_box_error">#f35959</color>
+    <color name="edit_font_hint">#bdbdbd</color>
+    <color name="edit_font_input">#3f3f3f</color>
+
+    <!-- 列表 -->
+    <color name="listview_item_normal">#ffffff</color>
+    <color name="listview_item_press">#f3f5f8</color>
+
+    <!-- 背景色 -->
+    <color name="backgroud_1">#e9ecf1</color>
+    <color name="backgroud_2">#ffffff</color>
+    <color name="backgroud_subtitle">#f3f5f9</color>
+    <!-- 分隔线 -->
+    <color name="dividing_line">#dce1e8</color>
+
+    <color name="agoravoice_title_bg">#3dd2e8</color>
+    <color name="agoravoice_tip_bg">#f5f5f5</color>
+
+    <color name="file_common">#f7bf28</color>
+    <color name="file_common_press">#ddab36</color>
+
+</resources>

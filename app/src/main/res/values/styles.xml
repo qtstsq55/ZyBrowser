@@ -1,0 +1,17 @@
+<resources>
+
+    <style name="AppTheme" parent="Theme.AppCompat">
+        <item name="colorPrimary">@color/accent_fc5</item>
+        <item name="colorPrimaryDark">@color/accent_fc5</item>
+        <item name="colorAccent">@color/keyword_tasK_me</item>
+        <item name="colorControlNormal">@color/keyword_tasK_me</item>
+        <item name="android:textColorPrimary">@color/backgroud_2</item>
+        <item name="android:textColor">@color/backgroud_2</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar" parent="AppTheme">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+    </style>
+
+</resources>

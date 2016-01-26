@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/layout_actionbar"
+                android:layout_width="fill_parent"
+                android:layout_height="?attr/actionBarSize">
+
+    <TextView
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        style="@style/ActionBarCommonTv"
+        android:id="@+id/btn_actionbar_left" />
+
+    <TextView
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/btn_actionbar_left"
+        android:id="@+id/tv_actionbar_left"
+        style="@style/ActionBarCommonTv"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_centerVertical="true"
+        android:id="@+id/tv_actionbar_top"
+        style="@style/ActionBarTitleCommonTv"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/btn_actionbar_right"
+        android:id="@+id/tv_actionbar_right"
+        style="@style/ActionBarCommonTv" />
+
+    <TextView
+        android:visibility="invisible"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:id="@+id/btn_actionbar_right"
+        style="@style/ActionBarCommonTv"/>
+
+</RelativeLayout>

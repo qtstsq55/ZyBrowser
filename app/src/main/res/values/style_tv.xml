@@ -1,0 +1,26 @@
+<resources>
+    <style name="CommonTv">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/primary_light_fc6</item>
+        <item name="android:textSize">@dimen/common_font_fs1</item>
+    </style>
+
+    <style name="CommonSingleTv" parent="CommonTv">
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="ActionBarTitleCommonTv" parent="CommonSingleTv">
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/accent_fc5</item>
+        <item name="android:textSize">@dimen/common_font_fs1</item>
+    </style>
+
+    <style name="ActionBarCommonTv" parent="CommonSingleTv">
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@drawable/selector_actionbar_tv</item>
+        <item name="android:textSize">@dimen/common_font_fs5</item>
+    </style>
+
+</resources>

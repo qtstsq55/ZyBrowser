@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- pt->sp比例是:pt*1.1->sp -->
+    <dimen name="common_font_pt_5">5.5sp</dimen>
+    <dimen name="common_font_pt_6">6.6sp</dimen>
+    <dimen name="common_font_pt_7">7.7sp</dimen>
+    <dimen name="common_font_pt_8">8.8sp</dimen>
+    <dimen name="common_font_pt_9">9.9sp</dimen>
+    <dimen name="common_font_pt_10">11.0sp</dimen>
+    <dimen name="common_font_pt_11">12.1sp</dimen>
+    <dimen name="common_font_pt_12">13.2sp</dimen>
+    <dimen name="common_font_pt_13">14.3sp</dimen>
+    <dimen name="common_font_pt_14">15.4sp</dimen>
+    <dimen name="common_font_pt_15">16.5sp</dimen>
+    <dimen name="common_font_pt_16">17.6sp</dimen>
+    <dimen name="common_font_pt_17">18.7sp</dimen>
+    <dimen name="common_font_pt_18">19.8sp</dimen>
+    <dimen name="common_font_pt_19">20.9sp</dimen>
+    <dimen name="common_font_pt_20">22.0sp</dimen>
+    <dimen name="common_font_pt_21">23.1sp</dimen>
+    <dimen name="common_font_pt_22">24.2sp</dimen>
+    <dimen name="common_font_pt_23">25.3sp</dimen>
+    <dimen name="common_font_pt_24">26.4sp</dimen>
+    <dimen name="common_font_pt_25">27.5sp</dimen>
+    <dimen name="common_font_pt_26">28.6sp</dimen>
+    <dimen name="common_font_pt_27">29.7sp</dimen>
+    <dimen name="common_font_pt_28">30.8sp</dimen>
+    <dimen name="common_font_pt_29">31.9sp</dimen>
+    <dimen name="common_font_pt_30">33.0sp</dimen>
+
+    <dimen name="common_font_fs1">18sp</dimen>
+    <dimen name="common_font_fs2">17sp</dimen>
+    <dimen name="common_font_fs3">16sp</dimen>
+    <dimen name="common_font_fs4">15sp</dimen>
+    <dimen name="common_font_fs5">14sp</dimen>
+    <dimen name="common_font_fs6">13sp</dimen>
+    <dimen name="common_font_fs7">12sp</dimen>
+    <dimen name="common_font_fs8">11sp</dimen>
+    <dimen name="common_font_fs9">10sp</dimen>
+
+</resources>

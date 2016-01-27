@@ -1,5 +1,4 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:app="http://schemas.android.com/apk/res-auto"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              android:clipChildren="false">
@@ -8,6 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+        <include layout="@layout/activity_detail"/>
 
     </LinearLayout>
 
@@ -46,21 +46,46 @@
                 android:minHeight="?attr/actionBarSize" />
 
             <FrameLayout
+                android:background="@color/guide_fc5"
                 android:id="@+id/header_bar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:minHeight="?attr/actionBarSize"
-                android:orientation="vertical">
+                android:minHeight="?attr/actionBarSize">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="12dip"
+                    android:gravity="center_vertical"
+                    >
+
+                    <ImageView android:id="@+id/select_tv_back"
+                              style="@style/CommonSingleTv"
+                              android:background="@drawable/selector_actionbar_back"
+                              android:layout_alignParentLeft="true"
+                              android:layout_centerVertical="true"
+                              android:layout_marginLeft="@dimen/common_mar_left"
+                              android:text=""/>
 
                 <TextView
                     android:id="@+id/title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:layout_gravity="center"
+                    android:layout_height="fill_parent"
+                    android:ellipsize="middle"
+                    android:maxWidth="180dip"
+                    android:layout_centerInParent="true"
                     style="@style/CommonSingleTv"
-                    android:gravity="center"
-                    android:maxLines="1" />
+                    android:gravity="center" />
+
+
+                    <ImageView android:id="@+id/select_tv_refresh"
+                              android:background="@drawable/selector_actionbar_refresh"
+                              style="@style/CommonSingleTv"
+                              android:layout_alignParentRight="true"
+                              android:layout_centerVertical="true"
+                              android:gravity="center"
+                              android:layout_marginRight="@dimen/common_mar_right"/>
+
+                </RelativeLayout>
 
                 <com.zy.webbrowser.view.SparkPrograssBar
                     android:id="@+id/select_progressbar"
@@ -69,19 +94,9 @@
                     android:layout_width="match_parent"/>
 
             </FrameLayout>
-
+        <include layout="@layout/toolbar"/>
 
         </FrameLayout>
     </com.github.ksoichiro.android.observablescrollview.TouchInterceptionFrameLayout>
 
-    <include layout="@layout/toolbar"/>
-
-    <TextView
-        android:id="@+id/toolbar_title"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:ellipsize="end"
-        style="@style/CommonSingleTv"
-        android:gravity="center"
-        android:maxLines="1" />
 </FrameLayout>

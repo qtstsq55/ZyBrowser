@@ -40,14 +40,6 @@ public class BaseActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-        mTitleBar.setTopRightClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
     }
 
     public TitleBar getTitleBar() {

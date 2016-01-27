@@ -219,19 +219,26 @@ public abstract class ZyWebViewActivity extends BaseActivity  {
     @Override
     protected void initToolBar() {
         super.initToolBar();
+        mTitleBar.setRightBtnIcon(R.drawable.selector_actionbar_refresh);
+        mTitleBar.setTopRightClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                webview.reload();
+            }
+        });
         mTitleBar.setTopLeftClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (webview.canGoBack()) {
-                    if(webviewClient != null){
+                    if (webviewClient != null) {
                         webviewClient.setOnKeyBackFlag(true);
                     }
-                    if(webviewChromeClient !=null && webviewChromeClient.getVideoView() != null){
+                    if (webviewChromeClient != null && webviewChromeClient.getVideoView() != null) {
                         webviewChromeClient.onHideCustomView();
-                    }else{
+                    } else {
                         webview.goBack();
                     }
-                }else{
+                } else {
                     finish();
                 }
             }

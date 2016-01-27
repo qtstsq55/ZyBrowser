@@ -4,7 +4,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 
         <dimen name="dialog_padding">24dp</dimen>
-        <dimen name="grid_hor_space">4dp</dimen>
+        <dimen name="grid_hor_space">8dp</dimen>
         <dimen name="statusbar_height">48dp</dimen>
         <dimen name="folder_margin_layout">16dp</dimen>
         <dimen name="folder_margin_text">8dp</dimen>
@@ -25,10 +25,10 @@
 
         <dimen name="dialog_gridview_space_size">28dip</dimen>
         <dimen name="intersection_height">0dp</dimen>
-
+        <dimen name="detail_backdrop_height">256dp</dimen>
         <dimen name="sliding_slop">32dp</dimen>
         <dimen name="flexible_space_image_height">240dp</dimen>
         <dimen name="header_bar_height">72dp</dimen>
-
+        <dimen name="card_margin">16dp</dimen>
 
 </resources>

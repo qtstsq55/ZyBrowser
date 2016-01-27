@@ -1,15 +1,24 @@
 
 package com.zy.webbrowser.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebView;
+import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ObservableWebView;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
@@ -18,9 +27,13 @@ import com.github.ksoichiro.android.observablescrollview.Scrollable;
 import com.github.ksoichiro.android.observablescrollview.TouchInterceptionFrameLayout;
 import com.nineoldandroids.animation.ValueAnimator;
 import com.nineoldandroids.view.ViewHelper;
-import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.zy.webbrowser.R;
+import com.zy.webbrowser.adapter.ZyBaseAdapter;
+import com.zy.webbrowser.model.WebSite;
 import com.zy.webbrowser.util.AndroidUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SelectBaseActivity extends ZyWebViewActivity implements ObservableScrollViewCallbacks {
 
@@ -29,20 +42,19 @@ public class SelectBaseActivity extends ZyWebViewActivity implements ObservableS
     private static final int SLIDING_STATE_MIDDLE = 1;
     private static final int SLIDING_STATE_BOTTOM = 2;
 
-    private View mHeader;
-    private View mHeaderBar;
+    private View mHeader,mBack,mRefresh;
     private TextView mTitle;
-    private TextView mToolbarTitle;
     private View mImageView;
     private TouchInterceptionFrameLayout mInterceptionLayout;
+    private CollapsingToolbarLayout collapsingToolbar;
+    private EditText editText;
+    private ImageView im_go;
 
     private int mActionBarSize;
     private int mIntersectionHeight;
     private int mHeaderBarHeight;
     private int mSlidingSlop;
-    private int mColorPrimary;
-    private int mFlexibleSpaceImageHeight;
-
+    private GridView gridView;
     private int mSlidingState;
     private boolean mMoved;
     private float mInitialY;
@@ -54,6 +66,8 @@ public class SelectBaseActivity extends ZyWebViewActivity implements ObservableS
     private boolean mHeaderIsAtBottom;
     private boolean mHeaderIsNotAtBottom;
     private String url;
+    private ZyBaseAdapter<WebSite> adapter;
+    private List<WebSite> webSiteList = new ArrayList<WebSite>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +75,7 @@ public class SelectBaseActivity extends ZyWebViewActivity implements ObservableS
         initActionBar(this);
         initDatas();
         initViews();
+        initViewValue();
         initEvents();
         if (savedInstanceState == null) {
             mSlidingState = SLIDING_STATE_BOTTOM;
@@ -70,24 +85,43 @@ public class SelectBaseActivity extends ZyWebViewActivity implements ObservableS
     }
 
     private void initDatas(){
-        mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
         mIntersectionHeight = getResources().getDimensionPixelSize(R.dimen.intersection_height);
-//        mSlidingSlop = getResources().getDimensionPixelSize(R.dimen.sliding_slop);
         mActionBarSize = AndroidUtils.getActionBarSize(this);
         mSlidingSlop = mHeaderBarHeight = mActionBarSize;
-        mColorPrimary = getResources().getColor(R.color.guide_fc5);
+        webSiteList = AndroidUtils.getDefaultWebsites();
+        adapter = new ZyBaseAdapter<WebSite>(this, webSiteList, R.layout.fag_select_item) {
+            @Override
+            protected void dealObject(WebSite model, ViewHolder viewHolder, int position, View view) {
+                ImageView im = (ImageView) viewHolder.getRootView().findViewById(R.id.select_item_im);
+                TextView tv = (TextView) viewHolder.getRootView().findViewById(R.id.select_item_tv);
+                im.setBackgroundResource(model.getDrawableId());
+                tv.setText(model.getName());
+            }
+        };
     }
 
     private void initViews(){
         mHeader = findViewById(R.id.header);
-        mHeaderBar = findViewById(R.id.header_bar);
         mImageView = findViewById(R.id.select_image);
+        collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.detail_collapsing_toolbar);
         mInterceptionLayout = (TouchInterceptionFrameLayout) findViewById(R.id.scroll_wrapper);
         mTitle = (TextView) findViewById(R.id.title);
-        mToolbarTitle = (TextView) findViewById(R.id.toolbar_title);
+        gridView= (GridView) findViewById(R.id.layout_select_grid);
+        im_go = (ImageView) findViewById(R.id.select_im_go);
+        editText = (EditText) findViewById(R.id.select_et);
+        mBack = findViewById(R.id.select_tv_back);
+        mRefresh = findViewById(R.id.select_tv_refresh);
     }
 
-    private void initEvents(){
+    private void initViewValue(){
+        mTitle.setText("Welcome");
+        gridView.setAdapter(adapter);
+        ViewHelper.setTranslationY(mTitle, (mHeaderBarHeight - mActionBarSize) / 2);
+        loadBackdrop();
+    }
+
+
+    private void initEvents() {
         mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,16 +129,44 @@ public class SelectBaseActivity extends ZyWebViewActivity implements ObservableS
             }
         });
         mInterceptionLayout.setScrollInterceptionListener(mInterceptionListener);
-        mTitle.setText(mTitleBar.getTopTitle());
-        mToolbarTitle.setText(mTitleBar.getTopTitle());
-        ViewHelper.setAlpha(mToolbarTitle, 0);
-        ViewHelper.setTranslationY(mTitle, (mHeaderBarHeight - mActionBarSize) / 2);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                AndroidUtils.gotoBrowserActivity(SelectBaseActivity.this, webSiteList.get(position).getUrl());
+            }
+        });
         ScrollUtils.addOnGlobalLayoutListener(mInterceptionLayout, new Runnable() {
             @Override
             public void run() {
                 changeSlidingState(mSlidingState, false);
             }
         });
+        im_go.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = editText.getText().toString();
+                if (TextUtils.isEmpty(url)) {
+                    Toast.makeText(SelectBaseActivity.this, "请输入有效链接", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                AndroidUtils.gotoBrowserActivity(SelectBaseActivity.this, url);
+            }
+        });
+        mRefresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTitleBar.getTopRightBtn().performClick();
+            }
+        });
+
+        mBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTitleBar.getTopLeftBtn().performClick();
+
+            }
+        });
+
     }
 
     @Override
@@ -132,17 +194,20 @@ public class SelectBaseActivity extends ZyWebViewActivity implements ObservableS
         return false;
     }
 
+
     @Override
     protected void initToolBar() {
         super.initToolBar();
-        ViewHelper.setScaleY(mTitleBar, 0);
-        mTitleBar.setTitlebarBackground(Color.TRANSPARENT);
-        mTitleBar.setTopTitle("Welcome");
+        mTitleBar.setVisibility(View.GONE);
     }
 
     @Override
     protected void initTitleName(WebView webView) {
-//        super.initTitleName(webView);
+        String titleName = webView.getTitle();
+        if (TextUtils.isEmpty(titleName)) {
+            titleName = "ZyBrowser";
+        }
+        mTitle.setText(titleName);
     }
 
     protected Scrollable createScrollable() {
@@ -163,6 +228,15 @@ public class SelectBaseActivity extends ZyWebViewActivity implements ObservableS
         outState.putInt(STATE_SLIDING_STATE, mSlidingState);
         super.onSaveInstanceState(outState);
     }
+
+    private void loadBackdrop() {
+        final ImageView imageView = (ImageView) findViewById(R.id.detail_image);
+        Glide.with(this).load(R.mipmap.detail_bg).centerCrop().into(imageView);
+        AndroidUtils.setTranslucentStatus(this, true);
+        collapsingToolbar.setExpandedTitleColor(getResources().getColor(R.color.new_year));
+        collapsingToolbar.setTitle("☆新年快乐☆");
+    }
+
 
 
     private TouchInterceptionFrameLayout.TouchInterceptionListener mInterceptionListener = new TouchInterceptionFrameLayout.TouchInterceptionListener() {
@@ -292,22 +366,6 @@ public class SelectBaseActivity extends ZyWebViewActivity implements ObservableS
         float imageTranslationY = Math.max(0, imageAnimatableHeight - (imageAnimatableHeight - translationY) * imageTranslationScale);
         ViewHelper.setTranslationY(mImageView, imageTranslationY);
 
-        if (animated) {
-            ViewPropertyAnimator.animate(mTitleBar).scaleY(0).setDuration(200).start();
-        } else {
-            ViewHelper.setScaleY(mTitleBar, 0);
-        }
-
-        if (ViewHelper.getTranslationY(mInterceptionLayout) <= mFlexibleSpaceImageHeight) {
-            if (animated) {
-                ViewPropertyAnimator.animate(mTitleBar).scaleY(1).setDuration(200).start();
-            } else {
-                ViewHelper.setScaleY(mTitleBar, 1);
-            }
-            mTitleBar.setBackgroundColor(ScrollUtils.getColorWithAlpha(0, getResources().getColor(R.color.guide_fc5)));
-        }
-
-        changeToolbarTitleVisibility();
         changeHeaderBarColorAnimated(animated);
     }
 
@@ -325,19 +383,6 @@ public class SelectBaseActivity extends ZyWebViewActivity implements ObservableS
         }
     }
 
-    private void changeToolbarTitleVisibility() {
-        if (ViewHelper.getTranslationY(mInterceptionLayout) <= mIntersectionHeight) {
-            if (ViewHelper.getAlpha(mToolbarTitle) != 1) {
-                ViewPropertyAnimator.animate(mToolbarTitle).cancel();
-                ViewPropertyAnimator.animate(mToolbarTitle).alpha(1).setDuration(200).start();
-            }
-        } else if (ViewHelper.getAlpha(mToolbarTitle) != 0) {
-            ViewPropertyAnimator.animate(mToolbarTitle).cancel();
-            ViewPropertyAnimator.animate(mToolbarTitle).alpha(0).setDuration(200).start();
-        } else {
-            ViewHelper.setAlpha(mToolbarTitle, 0);
-        }
-    }
 
     private void changeHeaderBarColorAnimated(boolean animated) {
         if (mHeaderColorIsChanging) {
@@ -382,8 +427,8 @@ public class SelectBaseActivity extends ZyWebViewActivity implements ObservableS
     }
 
     private void changeHeaderBarColor(float alpha) {
-        mHeaderBar.setBackgroundColor(ScrollUtils.mixColors(mColorPrimary, Color.WHITE, alpha));
-        mTitle.setTextColor(ScrollUtils.mixColors(Color.WHITE, Color.BLACK, alpha));
+//        mHeaderBar.setBackgroundColor(ScrollUtils.mixColors(mColorPrimary, Color.WHITE, alpha));
+//        mTitle.setTextColor(ScrollUtils.mixColors(Color.WHITE, Color.BLACK, alpha));
         mHeaderColorChangedToBottom = (alpha == 1);
     }
 

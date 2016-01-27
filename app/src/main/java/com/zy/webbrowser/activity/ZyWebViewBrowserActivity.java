@@ -2,9 +2,11 @@ package com.zy.webbrowser.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ObservableWebView;
@@ -19,15 +21,20 @@ public class ZyWebViewBrowserActivity extends ZyWebViewActivity implements Obser
 
     private static final String TAG = ZyWebViewBrowserActivity.class.getSimpleName();
     private Activity mAct = ZyWebViewBrowserActivity.this;
+    public static final String  BROWSERURLKEY = "browserurlkey";
     private String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initActionBar(this);
+        initDatas();
         initEvents();
-        url = UrlEndoe("https://www.baidu.com/");
         handleBusiness();
+    }
+
+    private void initDatas(){
+        url =  UrlEndoe(getIntent().getStringExtra(BROWSERURLKEY));
     }
 
     private void initEvents(){
@@ -36,6 +43,10 @@ public class ZyWebViewBrowserActivity extends ZyWebViewActivity implements Obser
 
 
     private void handleBusiness() {
+        if(TextUtils.isEmpty(url)){
+            Toast.makeText(this,"链接无效",Toast.LENGTH_SHORT).show();
+            return;
+        }
         this.webview.loadUrl(url);
     }
 

@@ -18,8 +18,12 @@ import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 
 import com.github.ksoichiro.android.observablescrollview.Scrollable;
+import com.liulishuo.filedownloader.BaseDownloadTask;
+import com.liulishuo.filedownloader.FileDownloadListener;
+import com.liulishuo.filedownloader.FileDownloader;
 import com.zy.webbrowser.R;
 import com.zy.webbrowser.util.AndroidUtils;
+import com.zy.webbrowser.util.NotificationManagerUtil;
 import com.zy.webbrowser.view.SparkController;
 import com.zy.webbrowser.view.SparkPrograssBar;
 import com.zy.webbrowser.web.ZyAppWebViewClient;
@@ -292,21 +296,51 @@ public abstract class ZyWebViewActivity extends BaseActivity  {
                 }
             });
         }
-        //暂未自定义下载器
+        final String savePath = getApplicationContext().getDir("zybrowser", Context.MODE_PRIVATE).getPath() + File.separator + "download";
         webview.setDownloadListener(new DownloadListener() {
-
             @Override
-            public void onDownloadStart(String arg0, String arg1, String arg2,
-                                        String arg3, long arg4) {
-                try {
-                    Uri uri = Uri.parse(arg0);
-                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                    startActivity(intent);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            public void onDownloadStart(String url, String userAgent, final String contentDisposition, String mimetype, long contentLength) {
+                FileDownloader.getImpl().create(url)
+                        .setPath(savePath)
+                        .setListener(new FileDownloadListener() {
+                            @Override
+                            protected void pending(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+                            }
 
+                            @Override
+                            protected void connected(BaseDownloadTask task, String etag, boolean isContinue, int soFarBytes, int totalBytes) {
+                            }
 
+                            @Override
+                            protected void progress(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+                                float prograss = soFarBytes / (float)totalBytes * 100f;
+                                NotificationManagerUtil.showCommon(ZyWebViewActivity.this, (int) prograss);
+                            }
+
+                            @Override
+                            protected void blockComplete(BaseDownloadTask task) {
+
+                            }
+
+                            @Override
+                            protected void completed(BaseDownloadTask task) {
+                                NotificationManagerUtil.cancel(ZyWebViewActivity.this);
+                            }
+
+                            @Override
+                            protected void paused(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+                            }
+
+                            @Override
+                            protected void error(BaseDownloadTask task, Throwable e) {
+                            }
+
+                            @Override
+                            protected void warn(BaseDownloadTask task) {
+
+                            }
+
+                        }).start();
             }
         });
 

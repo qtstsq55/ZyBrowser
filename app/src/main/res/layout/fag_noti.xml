@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_gravity="center_vertical"
+              android:layout_width="match_parent"
+              android:layout_height="64dip">
+
+    <ImageView
+        android:layout_width="48dip"
+        android:layout_height="48dip"
+        android:layout_gravity="center_vertical"
+        android:src="@mipmap/app_icon"
+        android:background="@color/popup"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="3dip"
+        android:layout_marginLeft="16dip"
+        android:layout_marginRight="16dip"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <TextView
+            style="@style/CommonSingleTv"
+            android:id="@+id/tv_noti"
+            android:textSize="@dimen/common_font_fs5"
+            android:text="sssss"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"/>
+
+        <ProgressBar
+            android:layout_marginTop="4dip"
+            android:id="@+id/pro_noti"
+            android:max="100"
+            style="@style/MyProgressBar"
+            android:layout_width="fill_parent"
+            android:layout_height="3dip"/>
+
+    </LinearLayout>
+
+
+
+
+</LinearLayout>

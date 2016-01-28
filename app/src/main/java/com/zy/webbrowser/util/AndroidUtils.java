@@ -66,8 +66,11 @@ public class AndroidUtils {
         win.setAttributes(winParams);
     }
 
-    public static int getStatusBarHeight(Activity activity) {
+    public static int getStatusBarHeightBySdk(Activity activity) {
         int result = 0;
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT){
+            return  result;
+        }
         int resourceId = activity.getResources().getIdentifier("status_bar_height", "dimen", "android");
         if (resourceId > 0) {
             result = activity.getResources().getDimensionPixelSize(resourceId);

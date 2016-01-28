@@ -86,7 +86,7 @@ public class SelectBaseActivity extends ZyWebViewActivity implements ObservableS
     private void initDatas(){
         mIntersectionHeight = getResources().getDimensionPixelSize(R.dimen.intersection_height);
         mSlidingSlop = mActionBarSize = AndroidUtils.getActionBarSize(this);
-        mHeaderBarHeight = mActionBarSize + AndroidUtils.getStatusBarHeight(this);
+        mHeaderBarHeight = mActionBarSize + AndroidUtils.getStatusBarHeightBySdk(this);
         webSiteList = AndroidUtils.getDefaultWebsites();
         adapter = new ZyBaseAdapter<WebSite>(this, webSiteList, R.layout.fag_select_item) {
             @Override
@@ -209,9 +209,14 @@ public class SelectBaseActivity extends ZyWebViewActivity implements ObservableS
         final ImageView imageView = (ImageView) findViewById(R.id.detail_image);
         Glide.with(this).load(R.mipmap.detail_bg).centerCrop().into(imageView);
         AndroidUtils.setTranslucentStatus(this, true);
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) addView.getLayoutParams();
-        params.height = AndroidUtils.getStatusBarHeight(this);
-        addView.setLayoutParams(params);
+        LinearLayout.LayoutParams addparams = (LinearLayout.LayoutParams) addView.getLayoutParams();
+        addparams.height = AndroidUtils.getStatusBarHeightBySdk(this);
+        addView.setLayoutParams(addparams);
+
+        FrameLayout.LayoutParams frameparams = (FrameLayout.LayoutParams) webview.getLayoutParams();
+        frameparams.topMargin = frameparams.topMargin+ AndroidUtils.getStatusBarHeightBySdk(this);
+        webview.setLayoutParams(frameparams);
+
         collapsingToolbar.setExpandedTitleColor(getResources().getColor(R.color.new_year));
         collapsingToolbar.setTitle("☆新年快乐☆");
     }
@@ -329,7 +334,7 @@ public class SelectBaseActivity extends ZyWebViewActivity implements ObservableS
     private void slideTo(float translationY, final boolean animated) {
         ViewHelper.setTranslationY(mInterceptionLayout, translationY);
         //将状态栏补上
-        if(translationY <= AndroidUtils.getStatusBarHeight(this)){
+        if(translationY <= AndroidUtils.getStatusBarHeightBySdk(this)){
             addView.setBackgroundColor(getResources().getColor(R.color.guide_fc5));
         }else{
             addView.setBackgroundColor(Color.TRANSPARENT);
@@ -341,9 +346,9 @@ public class SelectBaseActivity extends ZyWebViewActivity implements ObservableS
             mInterceptionLayout.requestLayout();
         }
 
-        float imageAnimatableHeight = getScreenHeight() - mHeaderBarHeight - AndroidUtils.getStatusBarHeight(this);
+        float imageAnimatableHeight = getScreenHeight() - mHeaderBarHeight - AndroidUtils.getStatusBarHeightBySdk(this);
         float imageTranslationScale = imageAnimatableHeight / (imageAnimatableHeight - mImageView.getHeight());
-        float imageTranslationY = Math.max(0, imageAnimatableHeight - (imageAnimatableHeight - translationY - AndroidUtils.getStatusBarHeight(this)) * imageTranslationScale);
+        float imageTranslationY = Math.max(0, imageAnimatableHeight - (imageAnimatableHeight - translationY - AndroidUtils.getStatusBarHeightBySdk(this)) * imageTranslationScale);
         ViewHelper.setTranslationY(mImageView, imageTranslationY);
 
         changeHeaderBarColorAnimated(animated);
@@ -418,7 +423,7 @@ public class SelectBaseActivity extends ZyWebViewActivity implements ObservableS
     }
 
     private float getAnchorYImage() {
-        return mImageView.getHeight() - AndroidUtils.getStatusBarHeight(this);
+        return mImageView.getHeight() - AndroidUtils.getStatusBarHeightBySdk(this);
     }
 
     @Override

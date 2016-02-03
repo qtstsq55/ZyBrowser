@@ -25,6 +25,17 @@
         android:layout_height="match_parent"
         android:clipChildren="false">
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+        <include
+            layout="@layout/fag_bottombar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_gravity="bottom"/>
+
         <com.github.ksoichiro.android.observablescrollview.ObservableWebView
             android:id="@+id/select_webview"
             android:layout_width="match_parent"
@@ -33,12 +44,13 @@
             android:background="@android:color/white"
             android:overScrollMode="never" />
 
+        </FrameLayout>
+
         <LinearLayout
             android:id="@+id/header"
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clipChildren="false">
+            android:layout_height="wrap_content">
 
             <View
                 android:id="@+id/addView"

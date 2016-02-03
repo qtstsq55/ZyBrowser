@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
@@ -19,8 +20,6 @@ import com.zy.webbrowser.R;
 
 public class ZyWebViewBrowserActivity extends ZyWebViewActivity implements ObservableScrollViewCallbacks {
 
-    private static final String TAG = ZyWebViewBrowserActivity.class.getSimpleName();
-    private Activity mAct = ZyWebViewBrowserActivity.this;
     public static final String  BROWSERURLKEY = "browserurlkey";
     private String url;
 
@@ -39,10 +38,30 @@ public class ZyWebViewBrowserActivity extends ZyWebViewActivity implements Obser
 
     private void initEvents(){
         mScrollable.setScrollViewCallbacks(this);
+        im_title.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        im_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTitleBar.getTopLeftBtn().performClick();
+            }
+        });
+        im_forward.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(webview!= null && webview.canGoForward()){
+                    webview.goForward();
+                }
+            }
+        });
     }
 
 
-    private void handleBusiness() {
+    protected void handleBusiness() {
         if(TextUtils.isEmpty(url)){
             Toast.makeText(this,"链接无效",Toast.LENGTH_SHORT).show();
             return;
@@ -89,6 +108,21 @@ public class ZyWebViewBrowserActivity extends ZyWebViewActivity implements Obser
     }
 
     @Override
+    public int getBottomTitleId() {
+        return R.id.im_bottom_title;
+    }
+
+    @Override
+    public int getBottomBackId() {
+        return R.id.im_bottom_back;
+    }
+
+    @Override
+    public int getBottomForwardId() {
+        return R.id.im_bottom_forward;
+    }
+
+    @Override
     protected void initToolBar() {
         super.initToolBar();
     }
@@ -116,23 +150,23 @@ public class ZyWebViewBrowserActivity extends ZyWebViewActivity implements Obser
         }
     }
 
-    private boolean toolbarIsShown() {
+    protected boolean toolbarIsShown() {
         return ViewHelper.getTranslationY(mTitleBar) == 0;
     }
 
-    private boolean toolbarIsHidden() {
+    protected boolean toolbarIsHidden() {
         return ViewHelper.getTranslationY(mTitleBar) == -mTitleBar.getHeight();
     }
 
-    private void showToolbar() {
+    protected void showToolbar() {
         moveToolbar(0);
     }
 
-    private void hideToolbar() {
+    protected void hideToolbar() {
         moveToolbar(-mTitleBar.getHeight());
     }
 
-    private void moveToolbar(float toTranslationY) {
+    protected void moveToolbar(float toTranslationY) {
         if (ViewHelper.getTranslationY(mTitleBar) == toTranslationY) {
             return;
         }
@@ -143,9 +177,6 @@ public class ZyWebViewBrowserActivity extends ZyWebViewActivity implements Obser
                 float translationY = (float) animation.getAnimatedValue();
                 ViewHelper.setTranslationY(mTitleBar, translationY);
                 ViewHelper.setTranslationY((View) mScrollable, translationY);
-                FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) ((View) mScrollable).getLayoutParams();
-                lp.height = (int) -translationY + getScreenHeight() - lp.topMargin;
-                ((View) mScrollable).requestLayout();
             }
         });
         animator.start();

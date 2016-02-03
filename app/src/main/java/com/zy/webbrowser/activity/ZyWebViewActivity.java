@@ -16,6 +16,7 @@ import android.webkit.DownloadListener;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
+import android.widget.ImageView;
 
 import com.github.ksoichiro.android.observablescrollview.Scrollable;
 import com.liulishuo.filedownloader.BaseDownloadTask;
@@ -44,6 +45,7 @@ public abstract class ZyWebViewActivity extends BaseActivity  {
 	private String mLastUrl;//上次webView加载完成后的url
 	private boolean isUserClicked = false; //是否用户对界面有点击
 	protected WebView webview;
+    protected ImageView im_title,im_back,im_forward;
 	protected ZyAppWebViewClient webviewClient;
 	protected ZyWebViewChromeClient webviewChromeClient;
 	protected SparkPrograssBar loadingProgressBar;
@@ -69,6 +71,9 @@ public abstract class ZyWebViewActivity extends BaseActivity  {
 
     private void initView(){
         webview = (WebView) findViewById(getWebViewId());
+        im_title = (ImageView) findViewById(getBottomTitleId());
+        im_back = (ImageView) findViewById(getBottomBackId());
+        im_forward = (ImageView) findViewById(getBottomForwardId());
         loadingProgressBar=(SparkPrograssBar)findViewById(getLoadingProgressBar());
         webviewClient = this.getWebViewClient();
         sparkController = new SparkController();
@@ -167,6 +172,12 @@ public abstract class ZyWebViewActivity extends BaseActivity  {
 
     protected abstract Scrollable createScrollable();
 
+    public abstract int getBottomTitleId();
+
+    public abstract int getBottomBackId();
+
+    public abstract int getBottomForwardId();
+
 
     public WebView getWebview() {
 		return webview;
@@ -184,7 +195,6 @@ public abstract class ZyWebViewActivity extends BaseActivity  {
 
 			@Override
 			public void onProgressChanged(WebView view, int newProgress) {
-                System.out.println(newProgress);
 				loadingProgressBar.setVisibility(View.VISIBLE);
                 if(newProgress > oldPrograss){
                    oldPrograss = newProgress;

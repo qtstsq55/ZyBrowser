@@ -7,11 +7,24 @@
 
     <include layout="@layout/toolbar"/>
 
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <include
+            layout="@layout/fag_bottombar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_gravity="bottom"/>
+
+
     <com.github.ksoichiro.android.observablescrollview.ObservableWebView
         android:id="@+id/webview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize" />
+
+    </FrameLayout>
 
 
 </FrameLayout>

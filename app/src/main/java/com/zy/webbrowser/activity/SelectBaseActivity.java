@@ -35,7 +35,7 @@ import com.zy.webbrowser.util.AndroidUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SelectBaseActivity extends ZyWebViewActivity implements ObservableScrollViewCallbacks {
+public class SelectBaseActivity extends ZyWebViewBrowserActivity{
 
     private static final String STATE_SLIDING_STATE = "slidingState";
     private static final int SLIDING_STATE_TOP = 0;
@@ -71,7 +71,6 @@ public class SelectBaseActivity extends ZyWebViewActivity implements ObservableS
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initActionBar(this);
         initDatas();
         initViews();
         initViewValue();
@@ -79,8 +78,6 @@ public class SelectBaseActivity extends ZyWebViewActivity implements ObservableS
         if (savedInstanceState == null) {
             mSlidingState = SLIDING_STATE_BOTTOM;
         }
-        url = UrlEndoe("https://www.baidu.com/");
-        webView.loadUrl(url);
     }
 
     private void initDatas(){
@@ -108,6 +105,7 @@ public class SelectBaseActivity extends ZyWebViewActivity implements ObservableS
         im_go = (ImageView) findViewById(R.id.select_im_go);
         editText = (EditText) findViewById(R.id.select_et);
         addView = findViewById(R.id.addView);
+//        bottomaddView = findViewById(R.id.bottom_addView);
     }
 
     private void initViewValue(){
@@ -174,6 +172,11 @@ public class SelectBaseActivity extends ZyWebViewActivity implements ObservableS
         return false;
     }
 
+    @Override
+    protected void handleBusiness() {
+        url = UrlEndoe("https://www.baidu.com/");
+        webView.loadUrl(url);
+    }
 
     @Override
     protected void initToolBar() {
@@ -188,10 +191,47 @@ public class SelectBaseActivity extends ZyWebViewActivity implements ObservableS
 
     protected Scrollable createScrollable() {
         webView = (ObservableWebView) findViewById(getWebViewId());
-        webView.setScrollViewCallbacks(this);
         return webView;
     }
 
+    @Override
+    protected boolean toolbarIsHidden() {
+        return ViewHelper.getTranslationY(mHeader) == -mHeader.getHeight() + addView.getMeasuredHeight();
+    }
+
+    @Override
+    protected boolean toolbarIsShown() {
+        return ViewHelper.getTranslationY(mHeader) == 0;
+    }
+
+    protected void showToolbar() {
+        mTitleBar.setVisibility(View.VISIBLE);
+        mHeader.setBackgroundColor(Color.TRANSPARENT);
+        moveToolbar(0);
+    }
+
+    protected void hideToolbar() {
+        mTitleBar.setVisibility(View.INVISIBLE);
+        mHeader.setBackgroundColor(getResources().getColor(R.color.guide_fc5));
+        moveToolbar(-mHeader.getHeight() + addView.getMeasuredHeight());
+    }
+
+    @Override
+    protected void moveToolbar(float toTranslationY) {
+        if (ViewHelper.getTranslationY(mHeader) == toTranslationY) {
+            return;
+        }
+        ValueAnimator animator = ValueAnimator.ofFloat(ViewHelper.getTranslationY(mHeader), toTranslationY).setDuration(200);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float translationY = (float) animation.getAnimatedValue();
+                ViewHelper.setTranslationY(mHeader, translationY);
+                ViewHelper.setTranslationY((View) mScrollable, translationY);
+            }
+        });
+        animator.start();
+    }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
@@ -424,20 +464,5 @@ public class SelectBaseActivity extends ZyWebViewActivity implements ObservableS
 
     private float getAnchorYImage() {
         return mImageView.getHeight() - AndroidUtils.getStatusBarHeightBySdk(this);
-    }
-
-    @Override
-    public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
-
-    }
-
-    @Override
-    public void onDownMotionEvent() {
-
-    }
-
-    @Override
-    public void onUpOrCancelMotionEvent(ScrollState scrollState) {
-
     }
 }

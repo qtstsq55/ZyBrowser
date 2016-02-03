@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/flexible_space_image_height"
         android:scaleType="centerCrop"
-        android:src="@mipmap/slid_bg" />
+        android:background="@mipmap/slid_bg" />
 
     <com.github.ksoichiro.android.observablescrollview.TouchInterceptionFrameLayout
         android:id="@+id/scroll_wrapper"

@@ -7,20 +7,31 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.TypedValue;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.WebView;
+import android.widget.Toast;
 
 import com.zy.webbrowser.R;
 import com.zy.webbrowser.activity.ZyWebViewBrowserActivity;
 import com.zy.webbrowser.model.WebSite;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class AndroidUtils {
+
+    public static final String IMAGE_UNKNOW = "image/*";
+    public static final String CAMERA_PATH = "/" + "我爱AV" + "/";
 
     public static String getVersionName(Context conText) {
         PackageManager pm = conText.getPackageManager();
@@ -84,83 +95,61 @@ public class AndroidUtils {
         context.startActivity(intent);
     }
 
-
-    public static List<WebSite> getDefaultWebsites() {
-        List<WebSite> list = new ArrayList<WebSite>();
-        WebSite baidu = new WebSite();
-        baidu.setDrawableId(R.mipmap.app_icon);
-        baidu.setName("百度");
-        baidu.setUrl("https://www.baidu.com/");
-
-        WebSite xinlang = new WebSite();
-        xinlang.setDrawableId(R.mipmap.app_icon);
-        xinlang.setName("新浪");
-        xinlang.setUrl("http://www.sina.com.cn/");
-
-        WebSite xiecheng = new WebSite();
-        xiecheng.setDrawableId(R.mipmap.app_icon);
-        xiecheng.setName("携程");
-        xiecheng.setUrl("http://www.ctrip.com/?utm_source=baidu&utm_medium=cpc&utm_campaign=baidu81&campaign=CHNbaidu81&adid=index&gclid=&isctrip=T");
-
-        WebSite taobao = new WebSite();
-        taobao.setDrawableId(R.mipmap.app_icon);
-        taobao.setName("淘宝");
-        taobao.setUrl("https://www.taobao.com/");
-
-        WebSite yamaxun = new WebSite();
-        yamaxun.setDrawableId(R.mipmap.app_icon);
-        yamaxun.setName("亚马逊");
-        yamaxun.setUrl("http://www.amazon.cn/?tag=baidhydrcnnv-23&ref=pz_ic_xmo_pp108");
-
-        WebSite tongcheng = new WebSite();
-        tongcheng.setDrawableId(R.mipmap.app_icon);
-        tongcheng.setName("同城");
-        tongcheng.setUrl("http://gz.58.com/?utm_source=market&spm=b-31580022738699-me-f-824.bdpz_biaoti");
-
-        WebSite ganji = new WebSite();
-        ganji.setDrawableId(R.mipmap.app_icon);
-        ganji.setName("赶集");
-        ganji.setUrl("http://gz.ganji.com/");
-
-        WebSite meituan = new WebSite();
-        meituan.setDrawableId(R.mipmap.app_icon);
-        meituan.setName("美团");
-        meituan.setUrl("http://www.meituan.com/cart/");
-
-        WebSite yihaodian = new WebSite();
-        yihaodian.setDrawableId(R.mipmap.app_icon);
-        yihaodian.setName("一号店");
-        yihaodian.setUrl("http://www.yhd.com/?tracker_u=2225501&type=3");
-
-        WebSite suning = new WebSite();
-        suning.setDrawableId(R.mipmap.app_icon);
-        suning.setName("苏宁");
-        suning.setUrl("http://www.suning.com/");
-
-        WebSite youku = new WebSite();
-        youku.setDrawableId(R.mipmap.app_icon);
-        youku.setName("优酷");
-        youku.setUrl("http://www.youku.com/");
-
-        WebSite shouye = new WebSite();
-        shouye.setDrawableId(R.mipmap.app_icon);
-        shouye.setName("首页");
-        shouye.setUrl("https://www.baidu.com/");
-
-        list.add(baidu);
-        list.add(xinlang);
-        list.add(xiecheng);
-        list.add(taobao);
-        list.add(yamaxun);
-        list.add(tongcheng);
-        list.add(ganji);
-        list.add(meituan);
-        list.add(yihaodian);
-        list.add(suning);
-        list.add(youku);
-        list.add(shouye);
-
-        return  list;
+    public static boolean chekSDCardExist(){
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            return true;
+        }
+        return false;
     }
+
+    public static void getPicFromSDCard(Activity act) {
+        if (chekSDCardExist()) {
+            Intent intentPhoto = new Intent(Intent.ACTION_PICK);
+            intentPhoto.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, IMAGE_UNKNOW);
+            intentPhoto.putExtra("return-data", false);
+            act.startActivityForResult(intentPhoto, ZyKey.COVERSELECTKEY);
+        } else {
+            Toast.makeText(act, "没有sd卡", Toast.LENGTH_LONG);
+        }
+    }
+
+    public static File createCameraFile(Context context) {
+        return createMediaFile(context,CAMERA_PATH);
+    }
+
+    public static String getPhotoFileName() {
+        Date date = new Date(System.currentTimeMillis());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("'IMG'_yyyyMMdd_HHmmss");
+        return dateFormat.format(date) + ".jpg";
+    }
+
+    private static File createMediaFile(Context context,String parentPath){
+        String state = Environment.getExternalStorageState();
+        File rootDir = state.equals(Environment.MEDIA_MOUNTED)?Environment.getExternalStorageDirectory():context.getCacheDir();
+        File folderDir = new File(rootDir.getAbsolutePath() + parentPath);
+        File tmpFile = new File(folderDir,getPhotoFileName());
+        return tmpFile;
+    }
+
+    public static String getRealPathFromURI(Context act, Uri contentUri) {
+        String imagePath = "";
+        String[] proj = { MediaStore.Images.Media.DATA };
+        Cursor cursor = act.getContentResolver().query(contentUri, proj, // Which columns to return
+                null, // WHERE clause; which rows to return (all rows)
+                null, // WHERE clause selection arguments (none)
+                null); // Order-by clause (ascending by name)
+        if (cursor == null || cursor.getCount() == 0) {
+            if (cursor != null) {
+                cursor.close();
+            }
+            return imagePath;
+        }
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        imagePath = cursor.getString(column_index);
+        cursor.close();
+        return imagePath;
+    }
+
 
 }

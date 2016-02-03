@@ -16,6 +16,8 @@ import com.github.ksoichiro.android.observablescrollview.Scrollable;
 import com.nineoldandroids.animation.ValueAnimator;
 import com.nineoldandroids.view.ViewHelper;
 import com.zy.webbrowser.R;
+import com.zy.webbrowser.util.ZyKey;
+import com.zy.webbrowser.util.ZyPrefs;
 
 
 public class ZyWebViewBrowserActivity extends ZyWebViewActivity implements ObservableScrollViewCallbacks {
@@ -38,26 +40,6 @@ public class ZyWebViewBrowserActivity extends ZyWebViewActivity implements Obser
 
     private void initEvents(){
         mScrollable.setScrollViewCallbacks(this);
-        im_title.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        im_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mTitleBar.getTopLeftBtn().performClick();
-            }
-        });
-        im_forward.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(webview!= null && webview.canGoForward()){
-                    webview.goForward();
-                }
-            }
-        });
     }
 
 
@@ -121,6 +103,7 @@ public class ZyWebViewBrowserActivity extends ZyWebViewActivity implements Obser
     public int getBottomForwardId() {
         return R.id.im_bottom_forward;
     }
+
 
     @Override
     protected void initToolBar() {

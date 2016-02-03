@@ -1,8 +1,11 @@
 
 package com.zy.webbrowser.activity;
 
+import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.text.TextUtils;
@@ -31,6 +34,9 @@ import com.zy.webbrowser.R;
 import com.zy.webbrowser.adapter.ZyBaseAdapter;
 import com.zy.webbrowser.model.WebSite;
 import com.zy.webbrowser.util.AndroidUtils;
+import com.zy.webbrowser.util.ZyKey;
+import com.zy.webbrowser.util.ZyPrefs;
+import com.zy.webbrowser.util.ZyUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,11 +86,23 @@ public class SelectBaseActivity extends ZyWebViewBrowserActivity{
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        String path = ZyPrefs.getString(ZyKey.COVERKEY,"");
+        if(TextUtils.isEmpty(path)){
+            mImageView.setBackgroundResource(R.mipmap.slid_bg);
+        }else{
+            mImageView.setBackgroundDrawable(new BitmapDrawable(BitmapFactory.decodeFile(path)));
+        }
+
+    }
+
     private void initDatas(){
         mIntersectionHeight = getResources().getDimensionPixelSize(R.dimen.intersection_height);
         mSlidingSlop = mActionBarSize = AndroidUtils.getActionBarSize(this);
         mHeaderBarHeight = mActionBarSize + AndroidUtils.getStatusBarHeightBySdk(this);
-        webSiteList = AndroidUtils.getDefaultWebsites();
+        webSiteList = ZyUtil.getDefaultWebsites();
         adapter = new ZyBaseAdapter<WebSite>(this, webSiteList, R.layout.fag_select_item) {
             @Override
             protected void dealObject(WebSite model, ViewHolder viewHolder, int position, View view) {
@@ -232,6 +250,7 @@ public class SelectBaseActivity extends ZyWebViewBrowserActivity{
         });
         animator.start();
     }
+
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
@@ -465,4 +484,5 @@ public class SelectBaseActivity extends ZyWebViewBrowserActivity{
     private float getAnchorYImage() {
         return mImageView.getHeight() - AndroidUtils.getStatusBarHeightBySdk(this);
     }
+
 }

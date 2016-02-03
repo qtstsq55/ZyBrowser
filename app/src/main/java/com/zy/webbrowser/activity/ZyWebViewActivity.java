@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,15 +17,27 @@ import android.webkit.DownloadListener;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
+import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.github.ksoichiro.android.observablescrollview.Scrollable;
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadListener;
 import com.liulishuo.filedownloader.FileDownloader;
+import com.orhanobut.dialogplus.DialogPlus;
+import com.orhanobut.dialogplus.GridHolder;
+import com.orhanobut.dialogplus.OnItemClickListener;
 import com.zy.webbrowser.R;
+import com.zy.webbrowser.adapter.ZyBaseAdapter;
+import com.zy.webbrowser.model.SettingModel;
+import com.zy.webbrowser.model.WebSite;
 import com.zy.webbrowser.util.AndroidUtils;
+import com.zy.webbrowser.util.DialogUtil;
 import com.zy.webbrowser.util.NotificationManagerUtil;
+import com.zy.webbrowser.util.ZyKey;
+import com.zy.webbrowser.util.ZyPrefs;
+import com.zy.webbrowser.util.ZyUtil;
 import com.zy.webbrowser.view.SparkController;
 import com.zy.webbrowser.view.SparkPrograssBar;
 import com.zy.webbrowser.web.ZyAppWebViewClient;
@@ -33,6 +46,7 @@ import com.zy.webbrowser.web.ZyWebViewChromeClient;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 
 public abstract class ZyWebViewActivity extends BaseActivity  {
@@ -53,6 +67,7 @@ public abstract class ZyWebViewActivity extends BaseActivity  {
     protected String titleName;
     protected Scrollable mScrollable;
     private int oldPrograss;
+    private List<SettingModel> settingModels;
 
 
 	@Override
@@ -177,6 +192,7 @@ public abstract class ZyWebViewActivity extends BaseActivity  {
     public abstract int getBottomBackId();
 
     public abstract int getBottomForwardId();
+
 
 
     public WebView getWebview() {
@@ -395,7 +411,60 @@ public abstract class ZyWebViewActivity extends BaseActivity  {
         });
 		
 		webview.setWebChromeClient(getWebViewChromeClient());
+
+        im_title.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                settingModels = ZyUtil.getBottomSettings();
+                ZyBaseAdapter<SettingModel> adapter = new ZyBaseAdapter<SettingModel>(ZyWebViewActivity.this,settingModels , R.layout.fag_setting_item) {
+                    @Override
+                    protected void dealObject(SettingModel model, ViewHolder viewHolder, int position, View view) {
+                        ImageView im = (ImageView) viewHolder.getRootView().findViewById(R.id.setting_item_im);
+                        TextView tv = (TextView) viewHolder.getRootView().findViewById(R.id.setting_item_tv);
+                        im.setBackgroundResource(model.getDrawableId());
+                        tv.setText(model.getTitle());
+                    }
+                };
+                GridHolder holder = new GridHolder(4);
+                OnItemClickListener onItemClickListener = new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(DialogPlus dialog, Object item, View view, int position) {
+                        switch (position){
+                            case 0:
+                                AndroidUtils.getPicFromSDCard(ZyWebViewActivity.this);
+                                break;
+                        }
+                    }
+                };
+                DialogUtil.showCompleteDialog(ZyWebViewActivity.this,holder, Gravity.BOTTOM,adapter,onItemClickListener,null,true);
+                holder.getInflatedView().setPadding(0, 24, 0, 24);
+            }
+        });
+        im_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTitleBar.getTopLeftBtn().performClick();
+            }
+        });
+        im_forward.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (webview != null && webview.canGoForward()) {
+                    webview.goForward();
+                }
+            }
+        });
 	}
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(data != null) {
+            if (requestCode == ZyKey.COVERSELECTKEY) {
+                Uri uri = data.getData();
+                ZyPrefs.putString(ZyKey.COVERKEY,AndroidUtils.getRealPathFromURI(ZyWebViewActivity.this, uri));
+            }
+        }
+    }
 
     protected  void initTitleName(WebView webView){
         titleName = webView.getTitle();

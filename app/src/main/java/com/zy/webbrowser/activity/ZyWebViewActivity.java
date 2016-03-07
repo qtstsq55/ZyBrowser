@@ -17,7 +17,6 @@ import android.webkit.DownloadListener;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -30,8 +29,10 @@ import com.orhanobut.dialogplus.GridHolder;
 import com.orhanobut.dialogplus.OnItemClickListener;
 import com.zy.webbrowser.R;
 import com.zy.webbrowser.adapter.ZyBaseAdapter;
+import com.zy.webbrowser.log.ZyLog;
 import com.zy.webbrowser.model.SettingModel;
-import com.zy.webbrowser.model.WebSite;
+import com.zy.webbrowser.serviceworker.ServiceContainer;
+import com.zy.webbrowser.serviceworker.ServiceWorkerGlobalScope;
 import com.zy.webbrowser.util.AndroidUtils;
 import com.zy.webbrowser.util.DialogUtil;
 import com.zy.webbrowser.util.NotificationManagerUtil;
@@ -46,7 +47,6 @@ import com.zy.webbrowser.web.ZyWebViewChromeClient;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 
 public abstract class ZyWebViewActivity extends BaseActivity  {
@@ -68,6 +68,8 @@ public abstract class ZyWebViewActivity extends BaseActivity  {
     protected Scrollable mScrollable;
     private int oldPrograss;
     private List<SettingModel> settingModels;
+    private ServiceContainer serviceContainer;
+    private ServiceWorkerGlobalScope serviceWorkerGlobalScope;
 
 
 	@Override
@@ -165,7 +167,7 @@ public abstract class ZyWebViewActivity extends BaseActivity  {
 		webSettings.setAppCachePath(appCachePath);
 		webSettings.setAppCacheEnabled(true);
         webSettings.setAllowFileAccess(true);
-//		//启用数据库
+		//启用数据库
 		webSettings.setDatabaseEnabled(true);
         String databasePath = lightAppPath + File.separator + "database";
         //启用地理定位
@@ -339,7 +341,7 @@ public abstract class ZyWebViewActivity extends BaseActivity  {
 
                             @Override
                             protected void progress(BaseDownloadTask task, int soFarBytes, int totalBytes) {
-                                float prograss = soFarBytes / (float)totalBytes * 100f;
+                                float prograss = soFarBytes / (float) totalBytes * 100f;
                                 NotificationManagerUtil.showCommon(ZyWebViewActivity.this, (int) prograss);
                             }
 
@@ -397,6 +399,7 @@ public abstract class ZyWebViewActivity extends BaseActivity  {
 
             @Override
             public void onPageFinished(WebView view, String url) {
+                ZyLog.d("onPageFinished: " + url);
                 mLastUrl = url;
                 initTitleName(webview);
             }
@@ -409,6 +412,8 @@ public abstract class ZyWebViewActivity extends BaseActivity  {
                 return false;
             }
         });
+
+        initServiceWorker();
 		
 		webview.setWebChromeClient(getWebViewChromeClient());
 
@@ -454,7 +459,15 @@ public abstract class ZyWebViewActivity extends BaseActivity  {
                 }
             }
         });
-	}
+    }
+
+    private void initServiceWorker(){
+        serviceContainer = new ServiceContainer(webview);
+        serviceWorkerGlobalScope = ServiceWorkerGlobalScope.getWorkerGlobalScope(webview);
+        webview.addJavascriptInterface(serviceContainer, "container");
+        webview.addJavascriptInterface(serviceWorkerGlobalScope, "global");
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -473,8 +486,5 @@ public abstract class ZyWebViewActivity extends BaseActivity  {
         }
         mTitleBar.setTopTitle(titleName);
     }
-
-
-
 
 }

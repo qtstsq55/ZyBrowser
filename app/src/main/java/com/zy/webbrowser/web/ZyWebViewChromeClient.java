@@ -1,7 +1,6 @@
 package com.zy.webbrowser.web;
 
 import android.content.pm.ActivityInfo;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.ConsoleMessage;
@@ -12,10 +11,10 @@ import android.webkit.WebView;
 
 import com.zy.webbrowser.R;
 import com.zy.webbrowser.activity.ZyWebViewActivity;
+import com.zy.webbrowser.log.ZyLog;
 
 public class ZyWebViewChromeClient extends WebChromeClient {
 
-	private static String TAG = "ZyWebViewChromeClient";
 	private View videoView ;
 	private CustomViewCallback videoCallBack;
 	private ViewGroup parentView;
@@ -29,14 +28,14 @@ public class ZyWebViewChromeClient extends WebChromeClient {
 	@Override
 	public boolean onJsAlert(WebView view, String url, String message,JsResult result) {
 		if(message != null){
-			Log.i(TAG, message);
+			ZyLog.d(message);
 		}
 		return super.onJsAlert(view, url, message, result);
 	}
 
 	@Override
 	public boolean onConsoleMessage(ConsoleMessage cm) {
-		Log.d(TAG, cm.message() + " -- From line " + cm.lineNumber() + " of " + cm.sourceId());
+        ZyLog.d(cm.message() + " -- From line " + cm.lineNumber() + " of " + cm.sourceId());
 		return true;
 	}
 

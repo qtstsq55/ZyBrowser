@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">我爱AV</string>
+    <string name="detail_name">年轻·奢华</string>
     <string name="title_activity_select">SelectActivity</string>
 </resources>

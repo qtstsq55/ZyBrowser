@@ -1,7 +1,6 @@
 
 package com.zy.webbrowser.activity;
 
-import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -22,9 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ObservableWebView;
-import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
 import com.github.ksoichiro.android.observablescrollview.Scrollable;
 import com.github.ksoichiro.android.observablescrollview.TouchInterceptionFrameLayout;
@@ -192,7 +189,7 @@ public class SelectBaseActivity extends ZyWebViewBrowserActivity{
 
     @Override
     protected void handleBusiness() {
-        url = UrlEndoe("https://www.baidu.com/");
+        url = UrlEndoe("file:///android_asset/index.html");
         webView.loadUrl(url);
     }
 
@@ -266,7 +263,7 @@ public class SelectBaseActivity extends ZyWebViewBrowserActivity{
 
     private void loadBackdrop() {
         final ImageView imageView = (ImageView) findViewById(R.id.detail_image);
-        Glide.with(this).load(R.mipmap.detail_bg).centerCrop().into(imageView);
+        Glide.with(this).load(R.mipmap.zy_detail_bg).centerCrop().into(imageView);
         AndroidUtils.setTranslucentStatus(this, true);
         LinearLayout.LayoutParams addparams = (LinearLayout.LayoutParams) addView.getLayoutParams();
         addparams.height = AndroidUtils.getStatusBarHeightBySdk(this);
@@ -276,8 +273,8 @@ public class SelectBaseActivity extends ZyWebViewBrowserActivity{
         frameparams.topMargin = frameparams.topMargin+ AndroidUtils.getStatusBarHeightBySdk(this);
         webview.setLayoutParams(frameparams);
 
-        collapsingToolbar.setExpandedTitleColor(getResources().getColor(R.color.new_year));
-        collapsingToolbar.setTitle("☆新年快乐☆");
+        collapsingToolbar.setExpandedTitleColor(getResources().getColor(R.color.detail_font_color));
+        collapsingToolbar.setTitle(getResources().getString(R.string.detail_name));
     }
 
 
